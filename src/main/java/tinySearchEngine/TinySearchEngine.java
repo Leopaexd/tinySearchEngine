@@ -13,18 +13,29 @@ public class TinySearchEngine implements TinySearchEngineBase{
 	
 	public TinySearchEngine() { 
 		//Constructor that creates an empty index where entries can be inserted
-		
 	}
 	
 	public void insert (Word word, Attributes attr) {
 		//Insertion
 		entry newEntry = new entry(word);
 		newEntry.addAttribute(attr);
-		index.add(null); //Adds an empty element to the index
-		//While-loop that iterates through all entries in the index from the right, all entries larger
-		//than the new entry is moved one step to the right
+		if (index.size()==0) {
+			index.add(newEntry);
+			return;
+		}
 		int i = index.size()-1;
-		while (index.get(i).compareTo(newEntry) > 0) {
+		//System.out.println(i);
+		
+		//Tillfällig optimering, behöver bara gå igenom del av indexet	
+		while (index.get(i/2).compareTo(newEntry) > 0 && i > 2) {
+			i = i/2;
+		} 
+		
+		index.add(newEntry); //Adds entry to the index at the right end, to increase size 
+	
+		//While-loop that iterates through all entries in the index from the right, all entries larger
+				//than the new entry is moved one step to the right
+		while (index.get(i).compareTo(newEntry) >= 0 && i > 0) {
 			index.set(i+1, index.get(i)); //Moves element to the right
 			i--;
 		}
