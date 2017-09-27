@@ -9,8 +9,7 @@ import se.kth.id1020.util.Document;
 import se.kth.id1020.util.Word;
 
 public class TinySearchEngine implements TinySearchEngineBase{
-	entry index;
-	int indexSize = 0;
+	ArrayList<entry> index = new ArrayList<entry>();
 	
 	public TinySearchEngine() { 
 		//Constructor that creates an empty index where entries can be inserted
@@ -20,26 +19,23 @@ public class TinySearchEngine implements TinySearchEngineBase{
 	public void insert (Word word, Attributes attr) {
 		//Insertion
 		entry newEntry = new entry(word);
-		newEntry.setLink(index); //TODO DUBBELKOLLA ATT DET FUNKAR
-		index = newEntry;
-		indexSize++;
+		newEntry.addAttribute(attr);
+		index.add(null); //Adds an empty element to the index
+		//While-loop that iterates through all entries in the index from the right, all entries larger
+		//than the new entry is moved one step to the right
+		int i = index.size()-1;
+		while (index.get(i).compareTo(newEntry) > 0) {
+			index.set(i+1, index.get(i)); //Moves element to the right
+			i--;
+		}
+		index.set(i, newEntry); //inserts new entry at the right place in the index, keeping it in order
 	}
 	
 	//Search
 	public List<Document> search (String query) {
 		//Find word matching query in the linked list
-		entry current = index;
 		List<Document> results = new ArrayList<Document>();
-		for (int i = 0; i < indexSize; i++) {
-			if (current.word.word == query) {
-				for (Attributes item : current.attributeList) {
-					results.add(item.document);
-				}
-				return results; //Returns list of documents containing word matching query
-			} else {
-				current = current.link;
-			}
-		}
-		return results; //Returns empty list if nothing found
+		
+		return results; 
 	}
 }
