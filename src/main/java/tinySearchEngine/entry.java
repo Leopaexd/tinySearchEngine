@@ -11,9 +11,10 @@ public class entry implements Comparable<entry> {
 	ArrayList<Attributes> attributeList = new ArrayList<Attributes>(); //List of attributes
 	Word word; //The stored word
 	
-	public entry(Word newWord) {
+	public entry(Word newWord, Attributes newAttribute) {
 		//Constructor
 		word = newWord;
+		addAttribute (newAttribute);
 	}
 	
 	public void addAttribute(Attributes newAttribute) {
