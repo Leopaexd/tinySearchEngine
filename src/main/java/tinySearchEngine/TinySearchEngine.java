@@ -26,12 +26,9 @@ public class TinySearchEngine implements TinySearchEngineBase{
 		int i = index.size()-1;
 		System.out.println(i);
 		
-		while (index.get(i).word.word.compareTo(word.word) < 0 && i < index.size()/2) i=i*2; 
-		//if the new word should be to the right of the word at index i, i is multiplied by two, so that the
-		//insert method does not have to iterate over each entry
 		
 		//While-loop that iterates through all entries in the index part from the right
-		while (index.get(i).word.word.compareTo(word.word) > 0 && i < 0) {
+		while (index.get(i).word.word.compareTo(word.word) >= 0 && i > 0) { //new word should be to the left
 			if (index.get(i).word.word.compareTo(word.word) == 0) {
 				index.get(i).addAttribute(attr);
 				return;
@@ -39,16 +36,31 @@ public class TinySearchEngine implements TinySearchEngineBase{
 			i--;
 			}
 		}
+		
 		entry newEntry = new entry(word, attr);
-		index.add(i, newEntry); //inserts new entry at the right place in the index, keeping it in order, 
+		//System.out.println("added to index: " + i);
+		index.add(i+1, newEntry); //inserts new entry at the right place in the index, keeping it in order, 
 								//shifting subsequent entries to the right
+		if (index.size() == 40100) for (entry entry: index) System.out.println(entry.word.word);
 	}
 	
 	//Search
 	public List<Document> search (String query) {
-		//Find word matching query in the linked list
+		//Find word matching query in the linked list using binary search
 		List<Document> results = new ArrayList<Document>();
+		for (int i = 0; i < 25; i++) System.out.println(index.get(i).word.word);
+		int high = index.size()-1;
+		int low = 0;
 		
-		return results; 
+		while (high >= low) {
+			int i = low + (high - low)/2;
+			int comparison = index.get(i).word.word.compareTo(query);
+			if (comparison > 0) low = i+1; //word is in the right half
+			else if (comparison < 0) high = i-1; //word is in the left half
+			else if (comparison == 0) {
+				for (Attributes attribute: index.get(i).attributeList) results.add(attribute.document);
+			} 
+		}
+		return results;
 	}
 }
