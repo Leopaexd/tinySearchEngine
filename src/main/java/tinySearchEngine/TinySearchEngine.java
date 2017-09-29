@@ -23,24 +23,42 @@ public class TinySearchEngine implements TinySearchEngineBase{
 			index.add(newEntry);
 			return;
 		}
-		int i = index.size()-1;
-		System.out.println(i);
 		
+		System.out.println("Index size: " + index.size());
+		int i = 1;
 		
-		//While-loop that iterates through all entries in the index part from the right
-		while (index.get(i).word.word.compareTo(word.word) >= 0 && i > 0) { //new word should be to the left
-			if (index.get(i).word.word.compareTo(word.word) == 0) {
-				index.get(i).addAttribute(attr);
-				return;
-			} else {
-			i--;
-			}
+		if (index.size() <= 2) {
+			i = index.size()-1;
 		}
 		
-		entry newEntry = new entry(word, attr);
-		//System.out.println("added to index: " + i);
-		index.add(i+1, newEntry); //inserts new entry at the right place in the index, keeping it in order, 
-								//shifting subsequent entries to the right
+		int comparison = index.get(i).word.word.compareTo(word.word);	
+		
+		//While-loop that iterates through all entries in the index part from the right
+		while (comparison != 0 && i > 0) { 	
+			if (comparison > 0 || i >= index.size()-1) {	//new word should be to the left
+				if (index.get(i-1).word.word.compareTo(word.word) < 0) { //right spot for new word
+					index.add(i, new entry(word, attr));
+					return;
+				} 
+				else i--;
+				}	else {//new word should be to the right		
+					i = i*4;
+					if (i > index.size()-1) i = index.size()-1; //prevent i from getting to large
+				}
+			
+			comparison = index.get(i).word.word.compareTo(word.word);
+		}
+		
+		if (index.get(i).word.word.compareTo(word.word) == 0) {
+			index.get(i).addAttribute(attr);
+			return;
+		} 
+		
+		if (i == 0) {
+			index.add(i, new entry(word, attr));
+			return;
+		}
+
 		if (index.size() == 40100) for (entry entry: index) System.out.println(entry.word.word);
 	}
 	
