@@ -24,16 +24,21 @@ public class TinySearchEngine implements TinySearchEngineBase{
 			return;
 		}
 		int i = index.size()-1;
-		System.out.println(i);
-		
+		//System.out.println(i);
+		int comparison = index.get(i).word.word.toLowerCase().compareTo(word.word.toLowerCase());
 		
 		//While-loop that iterates through all entries in the index part from the right
-		while (index.get(i).word.word.compareTo(word.word) >= 0 && i > 0) { //new word should be to the left
-			if (index.get(i).word.word.compareTo(word.word) == 0) {
+		while (comparison >= 0 && i >= 0) { //new word should be to the left
+			if (i == 0) {
+				i = -1;
+				break;
+			}
+			if (comparison == 0) {
 				index.get(i).addAttribute(attr);
 				return;
 			} else {
 			i--;
+			comparison = index.get(i).word.word.toLowerCase().compareTo(word.word.toLowerCase());
 			}
 		}
 		
@@ -41,7 +46,7 @@ public class TinySearchEngine implements TinySearchEngineBase{
 		//System.out.println("added to index: " + i);
 		index.add(i+1, newEntry); //inserts new entry at the right place in the index, keeping it in order, 
 								//shifting subsequent entries to the right
-		if (index.size() == 40100) for (entry entry: index) System.out.println(entry.word.word);
+		if (index.size() == 4010) for (entry entry: index) System.out.println(entry.word.word);
 	}
 	
 	//Search
