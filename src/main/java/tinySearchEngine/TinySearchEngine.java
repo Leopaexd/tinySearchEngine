@@ -1,6 +1,7 @@
 package tinySearchEngine;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import se.kth.id1020.TinySearchEngineBase;
@@ -17,36 +18,18 @@ public class TinySearchEngine implements TinySearchEngineBase{
 	
 	public void insert (Word word, Attributes attr) {
 		//Insertion
-		
-		if (index.size()==0) {
-			entry newEntry = new entry(word, attr);
-			index.add(newEntry);
-			return;
-		}
-		int i = index.size()-1;
-		//System.out.println(i);
-		int comparison = index.get(i).word.word.toLowerCase().compareTo(word.word.toLowerCase());
-		
-		//While-loop that iterates through all entries in the index part from the right
-		while (comparison >= 0 && i >= 0) { //new word should be to the left
-			if (i == 0) {
-				i = -1;
-				break;
-			}
-			if (comparison == 0) {
-				index.get(i).addAttribute(attr);
-				return;
-			} else {
-			i--;
-			comparison = index.get(i).word.word.toLowerCase().compareTo(word.word.toLowerCase());
-			}
-		}
+		//System.out.println("Index size: " + index.size());
 		
 		entry newEntry = new entry(word, attr);
-		//System.out.println("added to index: " + i);
-		index.add(i+1, newEntry); //inserts new entry at the right place in the index, keeping it in order, 
-								//shifting subsequent entries to the right
-		if (index.size() == 4010) for (entry entry: index) System.out.println(entry.word.word);
+		int point = Collections.binarySearch(index, newEntry);
+		if (point >= 0) {
+			index.get(point).addAttribute(attr);
+		} else {
+			index.add(-(point+1), newEntry);
+		}
+		
+		if (index.size() == 5000) for (entry entry: index) System.out.println(entry.word.word);
+		
 	}
 	
 	//Search

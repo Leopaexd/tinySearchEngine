@@ -24,6 +24,6 @@ public class entry implements Comparable<entry> {
 	
 	public int compareTo(entry comparison) {
 		//When entries are compared, comparison is made between the string representation of the entries' words
-		return this.word.word.compareTo(comparison.word.word);
+		return this.word.word.compareToIgnoreCase(comparison.word.word);
 	}
 }
