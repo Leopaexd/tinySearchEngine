@@ -11,7 +11,6 @@ import se.kth.id1020.util.Word;
 
 public class TinySearchEngine implements TinySearchEngineBase{
 	ArrayList<entry> index = new ArrayList<entry>();
-	List<Document> results = new ArrayList<Document>();
 	
 	public void insert (Word word, Attributes attr) {
 		//Create an entry for every new word and place it at the correct place in the index by using binary search.
@@ -27,6 +26,7 @@ public class TinySearchEngine implements TinySearchEngineBase{
 	public List<Document> search (String rawQuery) {
 		//Find word matching query in the index using binary search and add all documents where the word
 		//is found to list 'results' and return the list
+		List<Document> results = new ArrayList<Document>();
 		
 		String[] parsedQuery = rawQuery.split(" ");
 		int queryEnd = parsedQuery.length;
