@@ -23,15 +23,16 @@ public class TinySearchEngine implements TinySearchEngineBase{
 	}
 	
 	//Search
-	public List<Document> search (String query) {
+	public List<Document> search (String rawQuery) {
 		//Find word matching query in the index using binary search and add all documents where the word
 		//is found to list 'results' and return the list
 		List<Document> results = new ArrayList<Document>();
+		String parsedQuery = queryParser.parse(rawQuery)[0];
 		int high = index.size()-1;
 		int low = 0;	
 		while (high >= low) {
 			int i = low + (high - low)/2;
-			int comparison = index.get(i).word.word.compareToIgnoreCase(query);
+			int comparison = index.get(i).word.word.compareToIgnoreCase(parsedQuery);
 			if (comparison < 0) low = i+1; //word is in the right half
 			else if (comparison > 0) high = i-1; //word is in the left half 
 			else if (comparison == 0) {
