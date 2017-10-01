@@ -51,7 +51,8 @@ public class TinySearchEngine implements TinySearchEngineBase{
 			} 
 		}
 		}
-		return results;
+		
+		return resultSorter.sort("", "", results);
 		
 	}
 }
