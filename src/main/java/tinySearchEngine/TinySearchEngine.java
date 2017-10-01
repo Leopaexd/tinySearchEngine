@@ -11,6 +11,7 @@ import se.kth.id1020.util.Word;
 
 public class TinySearchEngine implements TinySearchEngineBase{
 	ArrayList<entry> index = new ArrayList<entry>();
+	List<Document> results = new ArrayList<Document>();
 	
 	public void insert (Word word, Attributes attr) {
 		//Create an entry for every new word and place it at the correct place in the index by using binary search.
@@ -26,13 +27,20 @@ public class TinySearchEngine implements TinySearchEngineBase{
 	public List<Document> search (String rawQuery) {
 		//Find word matching query in the index using binary search and add all documents where the word
 		//is found to list 'results' and return the list
-		List<Document> results = new ArrayList<Document>();
-		String parsedQuery = queryParser.parse(rawQuery)[0];
+		
+		String[] parsedQuery = rawQuery.split(" ");
+		int queryEnd = parsedQuery.length;
+		for (int k = 0; k < parsedQuery.length; k++) {
+			if (parsedQuery[k].compareToIgnoreCase("orderby") == 0) queryEnd = k; //determines where the search terms stop
+		}
+		
+		for (int j = 0; j < queryEnd; j++) {
+		//binary search
 		int high = index.size()-1;
 		int low = 0;	
 		while (high >= low) {
 			int i = low + (high - low)/2;
-			int comparison = index.get(i).word.word.compareToIgnoreCase(parsedQuery);
+			int comparison = index.get(i).word.word.compareToIgnoreCase(parsedQuery[j]);
 			if (comparison < 0) low = i+1; //word is in the right half
 			else if (comparison > 0) high = i-1; //word is in the left half 
 			else if (comparison == 0) {
@@ -42,6 +50,8 @@ public class TinySearchEngine implements TinySearchEngineBase{
 				break;
 			} 
 		}
+		}
 		return results;
+		
 	}
 }
