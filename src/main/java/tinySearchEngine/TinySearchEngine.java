@@ -30,12 +30,22 @@ public class TinySearchEngine implements TinySearchEngineBase{
 		List<Document> results = new ArrayList<Document>();
 		ArrayList<Integer> occurence = new ArrayList<Integer>(); //parallel list containing occurence
 		ArrayList<Integer> count = new ArrayList<Integer>(); //parallel list containing word count for a document
+		String property = "popularity"; //default
+		String direction = "descending"; //default
 		
 		String[] parsedQuery = rawQuery.split(" ");
 		int queryEnd = parsedQuery.length;
 		for (int k = 0; k < parsedQuery.length; k++) {
 			if (parsedQuery[k].compareToIgnoreCase("orderby") == 0) queryEnd = k; //determines where the search terms stop
 		}
+		
+		//Parse query description, invalid input is ignored. Default sorting is descending popularity
+		if (parsedQuery.length > queryEnd+1) {
+			if (parsedQuery[queryEnd+1].equalsIgnoreCase("occurence") || parsedQuery[queryEnd+1].equalsIgnoreCase("count")) {
+				property = parsedQuery[queryEnd+1];
+			}
+		}
+		if (parsedQuery.length > queryEnd+2) if (parsedQuery[queryEnd+2].equalsIgnoreCase("ascending")) direction = "ascending";
 		
 		for (int j = 0; j < queryEnd; j++) {
 		//binary search
@@ -57,6 +67,6 @@ public class TinySearchEngine implements TinySearchEngineBase{
 			}
 		}
 		
-		return resultSorter.sort("", "", results,occurence);
+		return resultSorter.sort(property, direction, results,occurence,count);
 	}
 }
