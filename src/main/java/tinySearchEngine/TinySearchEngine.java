@@ -13,6 +13,7 @@ public class TinySearchEngine implements TinySearchEngineBase{
 	ArrayList<entry> index = new ArrayList<entry>();
 	
 	public void insert (Word word, Attributes attr) {
+		System.out.println(index.size());
 		//Create an entry for every new word and place it at the correct place in the index by using binary search.
 		//If word is already in index, add new attribute to word.
 		if (word.word.compareToIgnoreCase("A") < 0) return; //Prevents numbers from being placed as words in the index
@@ -27,6 +28,8 @@ public class TinySearchEngine implements TinySearchEngineBase{
 		//Find word matching query in the index using binary search and add all documents where the word
 		//is found to list 'results' and return the list
 		List<Document> results = new ArrayList<Document>();
+		ArrayList<Integer> occurence = new ArrayList<Integer>(); //parallel list containing occurence
+		ArrayList<Integer> count = new ArrayList<Integer>(); //parallel list containing word count for a document
 		
 		String[] parsedQuery = rawQuery.split(" ");
 		int queryEnd = parsedQuery.length;
@@ -44,15 +47,16 @@ public class TinySearchEngine implements TinySearchEngineBase{
 				if (comparison < 0) low = i+1; //word is in the right half
 				else if (comparison > 0) high = i-1; //word is in the left half 
 				else if (comparison == 0) {
-					for (Attributes attribute : index.get(i).attributeList) {
-						if (results.contains(attribute.document) == false) results.add(attribute.document); 
-					} //prevent the same document from being listed multiple times
+					for (int k = 0; k < index.get(i).attributeList.size(); k++) {
+							results.add(index.get(i).attributeList.get(k).document); 
+							occurence.add(index.get(i).attributeList.get(k).occurrence);
+							count.add(index.get(i).count.get(k));
+					} 
 					break;
 				} 
 			}
 		}
 		
-		return resultSorter.sort("", "", results);
-		
+		return resultSorter.sort("", "", results,occurence);
 	}
 }
