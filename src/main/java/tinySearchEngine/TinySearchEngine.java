@@ -36,20 +36,20 @@ public class TinySearchEngine implements TinySearchEngineBase{
 		
 		for (int j = 0; j < queryEnd; j++) {
 		//binary search
-		int high = index.size()-1;
-		int low = 0;	
-		while (high >= low) {
-			int i = low + (high - low)/2;
-			int comparison = index.get(i).word.word.compareToIgnoreCase(parsedQuery[j]);
-			if (comparison < 0) low = i+1; //word is in the right half
-			else if (comparison > 0) high = i-1; //word is in the left half 
-			else if (comparison == 0) {
-				for (Attributes attribute : index.get(i).attributeList) {
-					if (results.contains(attribute.document) == false) results.add(attribute.document); 
-				} //prevent the same document from being listed multiple times
-				break;
-			} 
-		}
+			int high = index.size()-1;
+			int low = 0;	
+			while (high >= low) {
+				int i = low + (high - low)/2;
+				int comparison = index.get(i).word.word.compareToIgnoreCase(parsedQuery[j]);
+				if (comparison < 0) low = i+1; //word is in the right half
+				else if (comparison > 0) high = i-1; //word is in the left half 
+				else if (comparison == 0) {
+					for (Attributes attribute : index.get(i).attributeList) {
+						if (results.contains(attribute.document) == false) results.add(attribute.document); 
+					} //prevent the same document from being listed multiple times
+					break;
+				} 
+			}
 		}
 		
 		return resultSorter.sort("", "", results);
