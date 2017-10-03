@@ -13,7 +13,6 @@ public class TinySearchEngine implements TinySearchEngineBase{
 	ArrayList<entry> index = new ArrayList<entry>();
 	
 	public void insert (Word word, Attributes attr) {
-		System.out.println(index.size());
 		//Create an entry for every new word and place it at the correct place in the index by using binary search.
 		//If word is already in index, add new attribute to word.
 		if (word.word.compareToIgnoreCase("A") < 0) return; //Prevents numbers from being placed as words in the index
